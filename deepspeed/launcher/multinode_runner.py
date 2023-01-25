@@ -288,9 +288,9 @@ class MosaicMLRunner(MultiNodeRunner):
             "-m",
             "deepspeed.launcher.launch",
             '--world_info={}'.format(world_info_base64),
-            "--node_rank={}".format(os.environ['NODE_RANK'])",
-            "--master_addr={}".format(os.environ['MASTER_ADDR'])",
-            "--master_port={}".format(os.environ['MASTER_PORT'])",
+            "--node_rank={}".format(os.environ['NODE_RANK']),
+            "--master_addr={}".format(os.environ['MASTER_ADDR']),
+            "--master_port={}".format(os.environ['MASTER_PORT']),
         ]
 
         return deepspeed_launch + [self.user_script] + self.user_arguments
