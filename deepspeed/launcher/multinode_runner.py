@@ -269,6 +269,9 @@ class MosaicMLRunner(MultiNodeRunner):
         exports = ""
         for key, val in self.exports.items():
             exports += "export {}={}; ".format(key, val)
+        
+        if exports.endswith(' '):
+            exports = exports[:-1]
 
         try:
             import torch
