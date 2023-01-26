@@ -268,7 +268,7 @@ class MosaicMLRunner(MultiNodeRunner):
     def get_cmd(self, environment, active_resources):
         exports = []
         for key, val in self.exports.items():
-            exports += "export {}={}".format(key, val)
+            exports.append("export {}={}".format(key, val))
 
         try:
             import torch
