@@ -18,8 +18,8 @@ from copy import deepcopy
 
 import torch.cuda
 
-from .multinode_runner import PDSHRunner, OpenMPIRunner, MVAPICHRunner, SlurmRunner
-from .constants import PDSH_LAUNCHER, OPENMPI_LAUNCHER, MVAPICH_LAUNCHER, SLURM_LAUNCHER
+from .multinode_runner import PDSHRunner, OpenMPIRunner, MVAPICHRunner, SlurmRunner, MosaicMLRunner
+from .constants import PDSH_LAUNCHER, OPENMPI_LAUNCHER, MVAPICH_LAUNCHER, SLURM_LAUNCHER, MOSAICML_LAUNCHER
 from ..constants import TORCH_DISTRIBUTED_DEFAULT_PORT
 from ..utils import logger
 
@@ -343,6 +343,8 @@ def main(args=None):
             runner = MVAPICHRunner(args, world_info_base64, resource_pool)
         elif args.launcher == SLURM_LAUNCHER:
             runner = SlurmRunner(args, world_info_base64, resource_pool)
+        elif args.launcher == MOSAICML_LAUNCHER:
+            runner = MosaicMLRunner(args)
         else:
             raise NotImplementedError(f"Unknown launcher {args.launcher}")
 
