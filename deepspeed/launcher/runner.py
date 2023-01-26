@@ -373,7 +373,7 @@ def main(args=None):
         cmd = runner.get_cmd(env, active_resources)
 
     logger.info("cmd = {}".format(' '.join(cmd)))
-    result = subprocess.Popen(cmd, env=env.union(runner.exports))
+    result = subprocess.Popen(cmd, env=dict(env, **runner.exports))
     result.wait()
 
     # In case of failure must propagate the error-condition back to the caller (usually shell). The
