@@ -254,8 +254,8 @@ class MVAPICHRunner(MultiNodeRunner):
         return mpirun_cmd + export_cmd + python_exec + [self.user_script
                                                         ] + self.user_arguments
 class MosaicMLRunner(MultiNodeRunner):
-    def __init__(self, args):
-        super().__init__(args, None)
+    def __init__(self, args, world_info_base64):
+        super().__init__(args, world_info_base64)
 
     def backend_exists(self):
         return True
@@ -284,22 +284,22 @@ class MosaicMLRunner(MultiNodeRunner):
         for key, val in self.exports.items():
             exports.append("export {}={}".format(key, val))
 
-        try:
-            import torch
-            ranks_per_node = torch.cuda.device_count()
-        except:
-            raise RuntimeError('MosaicML backend requires torch to be installed')
-        num_nodes = int(os.environ['WORLD_SIZE']) // ranks_per_node
-        world_info_dict = {'node-{}'.format(str(i)): [j for j in range(ranks_per_node)] for i in range(num_nodes)}
-        world_info_json = json.dumps(world_info_dict).encode('utf-8')
-        world_info_base64 = base64.urlsafe_b64encode(world_info_json).decode('utf-8')
+        # try:
+        #     import torch
+        #     ranks_per_node = torch.cuda.device_count()
+        # except:
+        #     raise RuntimeError('MosaicML backend requires torch to be installed')
+        # num_nodes = int(os.environ['WORLD_SIZE']) // ranks_per_node
+        # world_info_dict = {'node-{}'.format(str(i)): [j for j in range(ranks_per_node)] for i in range(num_nodes)}
+        # world_info_json = json.dumps(world_info_dict).encode('utf-8')
+        # world_info_base64 = base64.urlsafe_b64encode(world_info_json).decode('utf-8')
 
         deepspeed_launch = [
             sys.executable,
             "-u",
             "-m",
             "deepspeed.launcher.launch",
-            '--world_info={}'.format(world_info_base64),
+            '--world_info={}'.format(self.world_info_base64),
             "--node_rank={}".format(os.environ['NODE_RANK']),
             "--master_addr={}".format(os.environ['MASTER_ADDR']),
             "--master_port={}".format(os.environ['MASTER_PORT']),
