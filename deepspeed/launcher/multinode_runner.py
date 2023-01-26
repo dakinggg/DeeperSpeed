@@ -266,12 +266,9 @@ class MosaicMLRunner(MultiNodeRunner):
                 self.args.user_args))
 
     def get_cmd(self, environment, active_resources):
-        exports = ""
+        exports = []
         for key, val in self.exports.items():
-            exports += "export {}={}; ".format(key, val)
-        
-        if exports.endswith(' '):
-            exports = exports[:-1]
+            exports += "export {}={}".format(key, val)
 
         try:
             import torch
@@ -284,7 +281,6 @@ class MosaicMLRunner(MultiNodeRunner):
         world_info_base64 = base64.urlsafe_b64encode(world_info_json).decode('utf-8')
 
         deepspeed_launch = [
-            exports,
             "cd {};".format(os.path.abspath('.')),
             sys.executable,
             "-u",
@@ -296,4 +292,4 @@ class MosaicMLRunner(MultiNodeRunner):
             "--master_port={}".format(os.environ['MASTER_PORT']),
         ]
 
-        return deepspeed_launch + [self.user_script] + self.user_arguments
+        return exports + deepspeed_launch + [self.user_script] + self.user_arguments
