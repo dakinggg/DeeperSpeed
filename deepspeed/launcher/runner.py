@@ -334,7 +334,6 @@ def main(args=None):
             deepspeed_launch += ["--detect_nvlink_pairs"]
             
         cmd = deepspeed_launch + [args.user_script] + args.user_args
-        print('+'*30, cmd)
     else:
         args.launcher = args.launcher.lower()
         if args.launcher == PDSH_LAUNCHER:
@@ -371,7 +370,6 @@ def main(args=None):
                     for var in fd.readlines():
                         key, val = var.split('=')
                         runner.add_export(key, val)
-
         cmd = runner.get_cmd(env, active_resources)
 
     logger.info("cmd = {}".format(' '.join(cmd)))
