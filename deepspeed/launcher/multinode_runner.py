@@ -270,6 +270,7 @@ class MosaicMLRunner(MultiNodeRunner):
                         config_files = {}
                         for k, v in arg_dict.get('config_files', {}).items():
                             print('+'*30, v)
+                            print('+'*30, repr(v))
                             config_files[k] = json.loads(v)
                         arg_dict['config_files'] = config_files
                 except json.JSONDecodeError as jde:
