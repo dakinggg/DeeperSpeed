@@ -276,6 +276,7 @@ class MosaicMLRunner(MultiNodeRunner):
         except:
             raise RuntimeError('MosaicML backend requires torch to be installed')
         num_nodes = int(os.environ['WORLD_SIZE']) / ranks_per_node
+        print(num_nodes, ranks_per_node)
         world_info_dict = {'node-{}'.format(str(i)): [j for j in range(ranks_per_node)] for i in range(num_nodes)}
         world_info_json = json.dumps(world_info_dict).encode('utf-8')
         world_info_base64 = base64.urlsafe_b64encode(world_info_json).decode('utf-8')
