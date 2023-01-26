@@ -292,4 +292,4 @@ class MosaicMLRunner(MultiNodeRunner):
             "--master_port={}".format(os.environ['MASTER_PORT']),
         ]
 
-        return exports + deepspeed_launch + [self.user_script] + self.user_arguments
+        return deepspeed_launch + [self.user_script] + self.user_arguments
