@@ -281,7 +281,6 @@ class MosaicMLRunner(MultiNodeRunner):
         world_info_base64 = base64.urlsafe_b64encode(world_info_json).decode('utf-8')
 
         deepspeed_launch = [
-            "cd {};".format(os.path.abspath('.')),
             sys.executable,
             "-u",
             "-m",
