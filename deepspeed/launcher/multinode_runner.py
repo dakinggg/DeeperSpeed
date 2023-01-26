@@ -261,9 +261,21 @@ class MosaicMLRunner(MultiNodeRunner):
         return True
 
     def parse_user_args(self):
-        return list(
-            map(lambda x: x if x.startswith("-") else "'{}'".format(x),
-                self.args.user_args))
+        user_args = []
+        for arg in self.args.user_args:
+            if arg.startswith('{') and arg.endswith('}'):
+                try:
+                    arg_dict = json.loads(arg)
+                    if 'config_files' in arg_dict:
+                        config_files = {}
+                        for k, v in arg_dict.get('config_files', {}).items():
+                            config_files[k] = json.loads(v)
+                        arg_dict['config_files'] = config_files
+                except json.JSONDecodeError as jde:
+                    raise ValueError('Please use plain json for your configs. Check for comments and lowercase trues') from jde
+                arg = json.dumps(arg_dict, separators=(',', ':'))
+            user_args.append(arg)
+        return user_args
 
     def get_cmd(self, environment, active_resources):
         exports = []
