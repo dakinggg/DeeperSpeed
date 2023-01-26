@@ -345,7 +345,7 @@ def main(args=None):
         elif args.launcher == SLURM_LAUNCHER:
             runner = SlurmRunner(args, world_info_base64, resource_pool)
         elif args.launcher == MOSAICML_LAUNCHER:
-            runner = MosaicMLRunner(args)
+            runner = MosaicMLRunner(args, world_info_base64)
         else:
             raise NotImplementedError(f"Unknown launcher {args.launcher}")
 
