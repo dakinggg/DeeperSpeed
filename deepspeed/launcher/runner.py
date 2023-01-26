@@ -332,7 +332,6 @@ def main(args=None):
         ]
         if args.detect_nvlink_pairs:
             deepspeed_launch += ["--detect_nvlink_pairs"]
-            
         cmd = deepspeed_launch + [args.user_script] + args.user_args
     else:
         args.launcher = args.launcher.lower()
