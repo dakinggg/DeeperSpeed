@@ -18,8 +18,8 @@ from copy import deepcopy
 import signal
 import time
 
-from .multinode_runner import PDSHRunner, OpenMPIRunner, MVAPICHRunner, SlurmRunner
-from .constants import PDSH_LAUNCHER, OPENMPI_LAUNCHER, MVAPICH_LAUNCHER, SLURM_LAUNCHER
+from .multinode_runner import PDSHRunner, OpenMPIRunner, MVAPICHRunner, SlurmRunner, MosaicMLRunner
+from .constants import PDSH_LAUNCHER, OPENMPI_LAUNCHER, MVAPICH_LAUNCHER, SLURM_LAUNCHER, MOSAICML_LAUNCHER
 from ..constants import TORCH_DISTRIBUTED_DEFAULT_PORT
 from ..nebula.constants import NEBULA_EXPORT_ENVS
 from ..utils import logger
@@ -515,6 +515,8 @@ def main(args=None):
             runner = MVAPICHRunner(args, world_info_base64, resource_pool)
         elif args.launcher == SLURM_LAUNCHER:
             runner = SlurmRunner(args, world_info_base64, resource_pool)
+        elif args.launcher == MOSAICML_LAUNCHER:
+            runner = MosaicMLRunner(args, world_info_base64)
         else:
             raise NotImplementedError(f"Unknown launcher {args.launcher}")
 
@@ -546,7 +548,7 @@ def main(args=None):
             cmd = runner.get_cmd(env, active_resources)
 
     logger.info(f"cmd = {' '.join(cmd)}")
-    result = subprocess.Popen(cmd, env=env)
+    result = subprocess.Popen(cmd, env=dict(env, **runner.exports))
 
     def sigkill_handler(signum, frame):
         result.send_signal(signal.SIGINT)
